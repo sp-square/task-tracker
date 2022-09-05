@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Tracker</title>
+    <link rel="stylesheet" href="./assets/css/reset.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Task Tracker<span>✨</span></h1>
+      <form>
+        <input type="text" name="task-name" placeholder="Enter a task" />
+        <select name="task-type">
+          <option value="" selected disabled>Pick a task type</option>
+          <option value="Business">Business</option>
+          <option value="Education">Education</option>
+          <option value="Family">Family</option>
+          <option value="Social">Social</option>
+        </select>
+        <button type="submit">Add Task</button>
+      </form>
+    </header>
+
+    <main>
+      <!-- This is the main section -->
+      <section>
+        <h2 class="section-title">Tasks To Do</h2>
+        <ul class="task-list" id="tasks-to-do"></ul>
+      </section>
+      <section>
+        <h2 class="section-title">Tasks In Progress</h2>
+        <ul class="task-list" id="tasks-in-progress"></ul>
+      </section>
+      <section>
+        <h2 class="section-title">Tasks Completed</h2>
+        <ul class="task-list" id="tasks-completed"></ul>
+      </section>
+    </main>
+
+    <footer>
+      Made with 🔥 by the Class of February 2023, UCLA Coding Bootcamp
+    </footer>
+
+    <script src="./assets/js/script.js"></script>
+  </body>
+</html>
