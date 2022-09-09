@@ -33,29 +33,27 @@ var colorThemes = [
 	},
 ];
 var colorThemeIdx = 0;
-var colorThemeLoop; // make out timer a global variable
-var colorTimeInterval = 3000; // different color theme every 3s
+var colorThemeTimer; // declare timer
+var colorTimeInterval = 3000; // time interval for displaying color themes, in milliseconds
 
 var tasks; // this will be an array to hold our tasks and make them available globally
 var taskIdTracker; // this will keep track of the next id number available for a new task being created
 
-// TODO - Function to trigger actions to take when page loads
+// Function to trigger actions to take when page loads
 function init() {
-	// TODO - Style select element
-
 	// Retrieve our array of tasks from local storage
 	tasks = JSON.parse(localStorage.getItem('tasks'));
 
 	// If there are no tasks, exit the function
 	if (!tasks) {
 		console.log('There were no tasks saved in local storage.');
+		// initialize tasks array and taskIdTracker
 		tasks = [];
-		// initialize taskIdTracker to 0
 		taskIdTracker = 0;
 		return;
 	}
 
-	// Loop through our array of retrieved tasks and display each task in its proper container. Also, initialize 'taskIdTracker' to the next number available.
+	// Loop through our array of retrieved tasks and display each task in its correct container depending on its status. Also, initialize 'taskIdTracker' to the next number available.
 	// Initialize taskIdTracker to the id of the first task found in the tasks array
 	taskIdTracker = tasks[0].id;
 	// Loop through the tasks array
@@ -91,7 +89,7 @@ function taskFormHandler(event) {
 		return;
 	}
 
-	// Check if we are editing an existing task or creating a new class by seeing if the form as a data-taskId attribute attached to it
+	// Check if we are editing an existing task or creating a new class by verifying if the form as a data-taskId attribute attached to it
 	var formHasDataTaskIdAttribute = formEl.hasAttribute('data-taskId'); // returns a boolean
 
 	if (formHasDataTaskIdAttribute) {
@@ -111,7 +109,6 @@ function taskFormHandler(event) {
 			type: taskType,
 			status: 'To Do',
 		};
-
 		createTask(newTaskObj);
 	}
 
@@ -124,14 +121,13 @@ function taskFormHandler(event) {
 function taskButtonHandler(event) {
 	// Get target element from click event
 	var targetEl = event.target;
-	// console.log('targetEl:', targetEl);
 
-	// If the element match the CSS selector '.editBtn', call the editTask function
+	// If the element matches the CSS selector '.editBtn', call the editTask function
 	if (targetEl.matches('.editBtn')) {
 		var taskId = targetEl.getAttribute('data-taskid');
 		startEditTaskInfo(taskId);
 	}
-	// If the element match the CSS selector '.deleteBtn', call the editTask function
+	// If the element matches the CSS selector '.deleteBtn', call the deleteTask function
 	else if (targetEl.matches('.deleteBtn')) {
 		var taskId = targetEl.getAttribute('data-taskid');
 		deleteTask(taskId);
@@ -143,7 +139,7 @@ function changeColorTheme() {
 	// Get the root element
 	var rootEl = document.querySelector(':root');
 
-	// Reset colorThemeIdx to 0 if we have reach the end of our 'colorThemes' array
+	// Reset colorThemeIdx to 0 if we have reached the end of our 'colorThemes' array
 	if (colorThemeIdx === colorThemes.length) {
 		colorThemeIdx = 0;
 	}
@@ -165,7 +161,7 @@ mainEl.addEventListener('click', taskButtonHandler);
 // Listen for change event on task status dropdown
 mainEl.addEventListener('change', changeTaskStatus);
 
-// Listen for click event on 'Task Tracker' h1
+// Listen for click event on sparkles emoji
 sparklesEl.addEventListener('click', function () {
 	// Toggle change color theme
 	colorLoop = !colorLoop;
@@ -173,9 +169,9 @@ sparklesEl.addEventListener('click', function () {
 	if (colorLoop) {
 		changeColorTheme();
 		// Set up timer to change color theme every 'colorTimeInterval'
-		colorThemeLoop = setInterval(changeColorTheme, colorTimeInterval);
+		colorThemeTimer = setInterval(changeColorTheme, colorTimeInterval);
 	} else {
-		clearInterval(colorThemeLoop);
+		clearInterval(colorThemeTimer);
 	}
 });
 
@@ -187,7 +183,6 @@ sparklesEl.addEventListener('click', function () {
 // CREATE
 // Function to create a new task
 function createTask(newTask) {
-	// console.log('Create task:', newTask);
 	// Display the new task in the 'Tasks To Do' section
 	displayTask(newTask);
 
@@ -195,14 +190,13 @@ function createTask(newTask) {
 	tasks.push(newTask);
 	localStorage.setItem('tasks', JSON.stringify(tasks));
 
-	// Increase task id tracker for next unique task id
+	// Increase taskIdTracker for next unique task id
 	taskIdTracker++;
 }
 
 // READ
 // Function to display a task into its correct section
 function displayTask(task) {
-	// console.log('Display task:', task);
 	// Create a 'li' element for the task to be displayed
 	var taskListItemEl = document.createElement('li');
 	taskListItemEl.setAttribute('class', 'task-item');
@@ -267,8 +261,6 @@ function displayTask(task) {
 // Functions to edit a task's name and type
 // Set the task to be edited into the form
 function startEditTaskInfo(taskId) {
-	// console.log('Start editing task with id:', taskId);
-
 	// Find the corresponding li element
 	var selectedTask = document.querySelector(
 		'.task-item[data-taskId="' + taskId + '"]'
@@ -284,7 +276,7 @@ function startEditTaskInfo(taskId) {
 		.slice(2)
 		.join(' ');
 
-	// Write selectedTaskName and selectedTaskType as values of 'input' and 'select' in our form
+	// Write selectedTaskName and selectedTaskType as values of their respective 'input' element in our form
 	inputTaskNameEl.value = selectedTaskName;
 	inputTaskTypeEl.value = selectedTaskType;
 
@@ -296,8 +288,6 @@ function startEditTaskInfo(taskId) {
 }
 // Save the updated task
 function finishEditTaskInfo(updatedTask) {
-	// console.log('Finish editing task:', updatedTask);
-
 	// Find the li with the data-taskId of the updatedTask
 	var listItemToUpdate = document.querySelector(
 		'.task-item[data-taskId="' + updatedTask.id + '"]'
@@ -316,7 +306,7 @@ function finishEditTaskInfo(updatedTask) {
 		}
 	}
 
-	// Remove data attrubte from form
+	// Remove data attribute from form
 	formEl.removeAttribute('data-taskId');
 	// Change back form button to say 'Add Task'
 	formEl.querySelector('button').textContent = 'Add Task';
@@ -324,10 +314,9 @@ function finishEditTaskInfo(updatedTask) {
 	// Save updated tasks array to local storage
 	localStorage.setItem('tasks', JSON.stringify(tasks));
 }
-// Function to edit a task' status
+// Edit a task' status
 function changeTaskStatus(event) {
 	var targetEl = event.target;
-	// console.log('targetEl:', targetEl);
 
 	// Get new status selected by user
 	var newStatus = targetEl.value;
@@ -338,7 +327,7 @@ function changeTaskStatus(event) {
 		'.task-item[data-taskId="' + taskId + '"]'
 	);
 
-	// Move task to it's correct container
+	// Move task to its correct container
 	if (newStatus === 'To Do') {
 		tasksToDoListEl.appendChild(selectedTask);
 	} else if (newStatus === 'In Progress') {
@@ -363,8 +352,6 @@ function changeTaskStatus(event) {
 // DELETE
 // Function to delete a task
 function deleteTask(taskId) {
-	// console.log('Delete task with id', taskId);
-
 	// Find the corresponding li element
 	var selectedTask = document.querySelector(
 		'.task-item[data-taskId="' + taskId + '"]'

@@ -54,7 +54,6 @@ header h1 {
 	text-shadow: -1px 0 var(--light), 0 1px var(--light), 1px 0 var(--light),
 		0 -1px var(--light);
 	margin-bottom: 2rem;
-	cursor: pointer;
 	display: flex;
 	justify-content: space-between;
 	align-items: baseline;
@@ -62,6 +61,7 @@ header h1 {
 
 header h1 span {
 	font-size: 3rem;
+	cursor: pointer;
 	transition: transform 0.5s ease-out;
 }
 
@@ -96,12 +96,12 @@ form input[name='task-name'] {
 	flex-basis: 50%;
 }
 
-form input:focus {
-	border-color: var(--accent);
-}
-
 form input[name='task-type'] {
 	flex-basis: 30%;
+}
+
+form input:focus {
+	border-color: var(--accent);
 }
 
 form button {
@@ -114,14 +114,14 @@ form button {
 /* Styles for the main section */
 main {
 	/* flex: 1 1 auto; /* flex: 1 1 0; or flex: 1; */
-	flex: 1 1;
+	flex: 1;
 	display: flex;
 	justify-content: space-between;
 	padding: 2rem 1rem;
 }
 
 section {
-	flex: 1 1;
+	flex: 1;
 	margin: 1rem;
 	display: flex;
 	flex-direction: column;
@@ -133,7 +133,7 @@ section {
 }
 
 .task-list {
-	flex: 1 1;
+	flex: 1;
 	list-style: none;
 	background-color: var(--grey);
 	border: 2px solid var(--dark);
